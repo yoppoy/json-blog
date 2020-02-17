@@ -1,0 +1,44 @@
+version: '3.4'
+
+volumes:
+  db-data:
+  node-modules-server:
+  node-modules-client:
+
+services:
+  server:
+    build:
+      context: .
+    networks:
+      - main
+    volumes:
+      - .:/server
+      - /node_modules/
+      - /client/node_modules/
+    ports:
+      - "8080:5000"
+    restart: always
+    environment:
+      - PORT=5000
+      - MONGOOSE_DEBUG=false
+      - MONGO_HOST=mongodb://db/jsonblog
+      - MONGO_USER=admin
+      - MONGO_PWD=root
+      - MONGO_PORT=27017
+      ##- WAIT_HOSTS=mongo:27017
+
+  db:
+    image: "mongo:3.6"
+    restart: always
+    networks:
+      - main
+    ports:
+      - "27017:27017"
+    volumes:
+      - db-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=root
+
+networks:
+  main:
