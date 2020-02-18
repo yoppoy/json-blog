@@ -46,7 +46,6 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0, 0.5)',
         backgroundAttachment: 'fixed',
         position: 'relative'
     },

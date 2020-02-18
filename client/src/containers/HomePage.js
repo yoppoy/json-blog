@@ -13,15 +13,7 @@ function HomePage({location}) {
         editorMode = true;
     return (
         <div>
-            <HomeBanner img={"/img/background.jpg"}
-                        title={"Learn from your mistakes and move on"}
-                        link={"board"}/>
             <Element name={"board"}>
-                <div className={classes.titleContainer}>
-                    <Typography className={classes.title} variant="h2">
-                        Get inspired...
-                    </Typography>
-                </div>
                 <Board className={classes.board} editorMode={editorMode}/>
             </Element>
         </div>

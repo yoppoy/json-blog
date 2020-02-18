@@ -1,33 +1,52 @@
-import React from 'react';
-import {useQuery} from '@apollo/react-hooks';
+import React, {useEffect, useState} from 'react';
 import Grid from '@material-ui/core/Grid';
-import ArticleCard from "./ArticleCard";
-import {makeStyles} from "@material-ui/core";
-import Loading from "./Loading";
+import {makeStyles, Typography} from "@material-ui/core";
 import {withRouter} from 'react-router-dom';
-import {GQL_QUERY_ARTICLES, GQL_QUERY_ARTICLES_EDITOR} from "../graphql";
+import Loading from "./Loading";
+import ArticleCard from "./ArticleCard";
 
 export default withRouter(function Board({editorMode = false, location}) {
     const classes = useStyles();
     let delay = 0;
-    const {loading, error, data} = useQuery((location.pathname === "/editor-mode") ? GQL_QUERY_ARTICLES_EDITOR : GQL_QUERY_ARTICLES);
+    let error = null;
+    const [state, setState] = useState({
+        articles: [],
+        loading: true,
+        error: null,
+    });
+    useEffect(() => {
+        fetch('http://localhost:5005/api/article/list', {method: "GET"})
+            .then(res => res.json())
+            .then(response => {
+                console.log(response);
+                setState({...state, articles: response, loading: false});
+            })
+            .catch(error => {
+                setState({...state, error: error, loading: false});
+            });
+    }, []);
 
-    if (loading) return <Loading/>;
-    if (error) return <p>Error {JSON.stringify(error)}</p>;
+    if (state.loading) return <Loading/>;
+    if (state.error) return <p>Error {JSON.stringify(error)}</p>;
     return (
         <Grid id={"board"}
               className={classes.grid}
               container
               direction="row"
               justify="center">
-            {data.articles.map((article, index) => {
+            {state.articles.map((article, index) => {
                 delay += 30;
                 return (
-                    <div key={article.title} className={classes.cardContainer}>
+                    <div key={article.title}>
                         <ArticleCard article={article} editorMode={editorMode} delay={delay}/>
                     </div>
                 );
             })}
+            {state.articles.length === 0 && (
+                <Typography className={classes.textEmpty} variant="h5">
+                    Aucuns articles...
+                </Typography>
+            )}
         </Grid>
     );
 });
@@ -35,9 +54,11 @@ export default withRouter(function Board({editorMode = false, location}) {
 const useStyles = makeStyles(theme => ({
     grid: {
         padding: 20,
-        marginTop: 10
     },
     cardContainer: {
         padding: 10,
     },
+    textEmpty: {
+        color: theme.palette.primary.A400
+    }
 }));
