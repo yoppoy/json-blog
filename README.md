@@ -1,5 +1,6 @@
 # JSON-blog
 A client-server app that parses and stores JSON articles to then display them on a material UI interface.
+![](./demo/demo.gif)
 
 ## Setup
 
