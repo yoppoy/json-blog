@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const compression = require('compression');
 const config = require('./config/index');
 const routes = require('./server/article.route');
 const ArticleCtrl = require('./server/article.controller');
@@ -18,9 +19,17 @@ const startMongo = async () => {
     });
 };
 
+const shouldCompress = (req, res) => {
+    if (req.headers['x-no-compression']) {
+        return false
+    }
+    return compression.filter(req, res);
+};
+
 startMongo().then(() => {
     ArticleCtrl.readArticleFiles();
     app.use(cors());
+    app.use(compression({filter: shouldCompress}));
     app.use('/api', routes);
     app.use(express.static(path.join(__dirname + '/client/build')));
     app.get('*', (req, res) => {
