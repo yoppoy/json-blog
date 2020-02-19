@@ -15,7 +15,7 @@ Setup the following environment variables in a `.env` file at the root of the pr
 | `NODE_ENV`   | Node environment (optional) | development |
 | `PORT`       | Port to run the app on (optional) | 4000 |
 
-#### Environment variables for the client)
+#### Environment variables (for the client)
 | Env Variable | Description | Example |
 |--------------|-------------|---------|
 | `REACT_API_HOST` | Host origin of the API (optional) | http://www.api.com |
