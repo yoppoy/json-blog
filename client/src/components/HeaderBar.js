@@ -12,29 +12,27 @@ const HeaderBar = ({location, history}) => {
     const classes = useStyles();
     const classesLabel = useStylesCustomLabel();
 
-    if (location.pathname === "/editor-mode")
-        return (
-            <div className={classes.root}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography variant="h6" className={classes.title}>
+    return (
+        <div className={classes.root}>
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography variant="h6" className={classes.title}>
 
-                        </Typography>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={<Switch checked={true}
-                                                 color="default"
-                                                 onChange={() => history.push('/')}
-                                                 aria-label="Editor mode"/>}
-                                label={'Editor mode'}
-                                classes={classesLabel}
-                            />
-                        </FormGroup>
-                    </Toolbar>
-                </AppBar>
-            </div>
-        );
-    return null;
+                    </Typography>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={<Switch checked={location.pathname === "/editor-mode"}
+                                             color="secondary"
+                                             onChange={() => history.push(location.pathname === '/editor-mode' ? '/' : '/editor-mode')}
+                                             aria-label="Editor mode"/>}
+                            label={'Editor mode'}
+                            classes={classesLabel}
+                        />
+                    </FormGroup>
+                </Toolbar>
+            </AppBar>
+        </div>
+    );
 };
 
 const useStyles = makeStyles(theme => ({

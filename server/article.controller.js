@@ -63,7 +63,6 @@ function readArticleFiles() {
  * Load article and append to req.
  */
 function load(req, res, next, id) {
-    console.log("Loading..");
     Article.get(id)
         .then((article) => {
             req.article = article; // eslint-disable-line no-param-reassign

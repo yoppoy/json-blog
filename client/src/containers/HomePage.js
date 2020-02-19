@@ -1,8 +1,7 @@
 import React from 'react';
-import {makeStyles, Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import Board from "../components/Board";
 import {withRouter} from "react-router-dom";
-import HomeBanner from "./FullScreen";
 import {Element} from "react-scroll/modules";
 
 function HomePage({location}) {

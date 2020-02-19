@@ -8,7 +8,7 @@ import {ThemeProvider} from "@material-ui/styles";
 const RouterConfig = () => (
     <BrowserRouter>
         <ThemeProvider theme={CustomTheme}>
-            {<HeaderBar/>}
+            <HeaderBar/>
             <div className="content">
                 {Routes}
             </div>

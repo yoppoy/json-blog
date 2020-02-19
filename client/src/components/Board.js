@@ -1,64 +1,106 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Grid from '@material-ui/core/Grid';
-import {makeStyles, Typography} from "@material-ui/core";
+import {CircularProgress, makeStyles, Typography} from "@material-ui/core";
 import {withRouter} from 'react-router-dom';
-import Loading from "./Loading";
 import ArticleCard from "./ArticleCard";
+import ArticleDialog from "./ArticleDialog";
+import Button from "@material-ui/core/Button";
 
-export default withRouter(function Board({editorMode = false, location}) {
+export default withRouter(function Board({editorMode = false}) {
     const classes = useStyles();
-    let delay = 0;
-    let error = null;
+    const [articles, setArticles] = useState([]);
     const [state, setState] = useState({
-        articles: [],
-        loading: true,
+        allArticlesLoaded: false,
+        articleSelectedIndex: undefined,
+        dialogOpened: false,
+        loading: false,
         error: null,
     });
     useEffect(() => {
-        fetch('http://localhost:5005/api/article/list', {method: "GET"})
-            .then(res => res.json())
-            .then(response => {
-                console.log(response);
-                setState({...state, articles: response, loading: false});
-            })
-            .catch(error => {
-                setState({...state, error: error, loading: false});
-            });
+        fetchArticles();
     }, []);
+    let delay = 0;
 
-    if (state.loading) return <Loading/>;
-    if (state.error) return <p>Error {JSON.stringify(error)}</p>;
+    const fetchArticles = useCallback((count = 24) => {
+        if (!state.loading) {
+            setState({...state, loading: true});
+            fetch(`http://localhost:5005/api/article/list?limit=${count}&skip=${articles.length}`, {method: "GET"})
+                .then(res => res.json())
+                .then(response => {
+                    setState({
+                        ...state,
+                        loading: false,
+                        allArticlesLoaded: response.length < 20,
+                    });
+                    setArticles(articles.concat(response));
+                })
+                .catch(error => {
+                    setState({...state, error: error, loading: false});
+                });
+        }
+    }, [state]);
+
     return (
-        <Grid id={"board"}
-              className={classes.grid}
-              container
-              direction="row"
-              justify="center">
-            {state.articles.map((article, index) => {
-                delay += 30;
-                return (
-                    <div key={article.title}>
-                        <ArticleCard article={article} editorMode={editorMode} delay={delay}/>
-                    </div>
-                );
-            })}
-            {state.articles.length === 0 && (
-                <Typography className={classes.textEmpty} variant="h5">
-                    Aucuns articles...
-                </Typography>
-            )}
-        </Grid>
+        <div className={classes.mainContainer}>
+            <Grid id={"board"}
+                  container
+                  direction="row"
+                  justify="center">
+                {articles.map((article, index) => {
+                    delay += 30;
+                    return (
+                        <div key={index}>
+                            <ArticleCard
+                                article={article}
+                                editorMode={editorMode}
+                                delay={delay}
+                                onClick={() => setState({...state, articleSelectedIndex: index, dialogOpened: true})}
+                            />
+                        </div>
+                    );
+                })}
+            </Grid>
+            <div className={classes.statusContainer}>
+                {(!state.loading && articles.length === 0) && (
+                    <Typography className={classes.textEmpty} variant="h5">
+                        Aucuns articles...
+                    </Typography>
+                )}
+                {(!state.loading && state.error) && (
+                    <Typography variant="h6">
+                        {state.error}
+                    </Typography>
+                )}
+                {(!state.loading && !state.allArticlesLoaded) && (
+                    <Button variant="outlined" color="primary" onClick={fetchArticles}>
+                        Load more
+                    </Button>)}
+                {state.loading && <CircularProgress disableShrink className={classes.progress}/>}
+                <ArticleDialog
+                    article={state.articleSelectedIndex !== undefined ? articles[state.articleSelectedIndex] : null}
+                    onClose={() => setState({...state, dialogOpened: false})}
+                    open={state.dialogOpened}/>
+            </div>
+        </div>
     );
 });
 
 const useStyles = makeStyles(theme => ({
-    grid: {
+    mainContainer: {
         padding: 20,
     },
     cardContainer: {
         padding: 10,
     },
+    statusContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: 30,
+    },
     textEmpty: {
-        color: theme.palette.primary.A400
+        color: theme.palette.primary.main
+    },
+    progress: {
+        margin: theme.spacing(2),
     }
 }));

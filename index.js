@@ -1,5 +1,4 @@
 const express = require('express');
-const httpStatus = require('http-status');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
