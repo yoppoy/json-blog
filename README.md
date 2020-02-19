@@ -20,7 +20,7 @@ Setup the following environment variables in a `.env` file at the root of the pr
 |--------------|-------------|---------|
 | `REACT_API_HOST` | Host origin of the API (optional) | http://www.api.com |
 
-### Installing
+### Installing locally
 To install all the necessary dependencies :
 ```
 cd server && npm install && cd client && npm install
@@ -31,15 +31,16 @@ npm start
 cd client && npm start
 ```
 
+### Running/Deploying with Docker
+```
+docker-compose build
+docker-compose up
+```
+
 ## Deployment
 ```
 cd client && npm run build
 cd .. && npm start
-```
-## Deployment with Docker
-```
-docker-compose build
-docker-compose up
 ```
 
 ## Built With
