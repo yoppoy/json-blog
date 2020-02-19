@@ -10,7 +10,7 @@ code {
     monospace;
 }
 
-.summary, .summary > *, .summary *  {
+.summary, .summary * {
     font-size: 1rem;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-weight: 400;
@@ -18,6 +18,6 @@ code {
     letter-spacing: 0.00938em;
 }
 
-.summary > a {
+.summary a {
     color: #f44336;
 }

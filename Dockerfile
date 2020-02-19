@@ -1,5 +1,5 @@
 # Use latest node version 8.x
-FROM node:8.10.0
+FROM node:10
 
 MAINTAINER Yan Poinssot <yan.poinssot@gmail.com>
 

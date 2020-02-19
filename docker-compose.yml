@@ -16,10 +16,10 @@ services:
       - /node_modules/
       - /client/node_modules/
     ports:
-      - "8080:5000"
+      - "8080:8080"
     restart: always
     environment:
-      - PORT=5000
+      - PORT=8080
       - MONGOOSE_DEBUG=false
       - MONGO_HOST=mongodb://db/jsonblog
       - MONGO_USER=admin

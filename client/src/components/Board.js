@@ -1,9 +1,10 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Grid from '@material-ui/core/Grid';
 import {CircularProgress, makeStyles, Typography} from "@material-ui/core";
 import {withRouter} from 'react-router-dom';
 import ArticleCard from "./ArticleCard";
 import ArticleDialog from "./ArticleDialog";
+import variables from '../config/Variables';
 import Button from "@material-ui/core/Button";
 
 export default withRouter(function Board({editorMode = false}) {
@@ -21,10 +22,11 @@ export default withRouter(function Board({editorMode = false}) {
     }, []);
     let delay = 0;
 
-    const fetchArticles = useCallback((count = 24) => {
+    function fetchArticles(count = 24) {
+        console.log(`${variables.host}/api/article/list?limit=${count}&skip=${articles.length}`);
         if (!state.loading) {
             setState({...state, loading: true});
-            fetch(`http://localhost:5005/api/article/list?limit=${count}&skip=${articles.length}`, {method: "GET"})
+            fetch(`${variables.host}/api/article/list?limit=${count}&skip=${articles.length}`, {method: "GET"})
                 .then(res => res.json())
                 .then(response => {
                     setState({
@@ -38,7 +40,7 @@ export default withRouter(function Board({editorMode = false}) {
                     setState({...state, error: error, loading: false});
                 });
         }
-    }, [state]);
+    }
 
     return (
         <div className={classes.mainContainer}>

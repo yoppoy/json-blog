@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LinkIcon from '@material-ui/icons/OpenInNew';
 import {Grow, Fade} from '@material-ui/core';
+import variables from '../config/Variables';
 
 function formatDate(date, separator = '-') {
     let newDate = new Date(date);
@@ -27,7 +28,7 @@ export default function ArticleCard({article, editorMode = false, delay = 0, onC
 
     function deleteArticle() {
         setAppear(false);
-        fetch(`http://localhost:5005/api/article/${article._id}`, {method: 'DELETE'})
+        fetch(`${variables.host}/api/article/${article._id}`, {method: 'DELETE'})
             .then(() => setTimeout(() => setVisible(false), 400))
             .catch(() => {
                 setAppear(false);
